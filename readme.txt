@@ -1,7 +1,7 @@
 === Customize WP UI ===
 Author URI: https://getkeypress.com/
-Plugin URI: https://getkeypress.com/
-Contributors: Asier Moreno
+Plugin URI: https://github.com/keypress-media/kp-wu-test-emails
+Contributors: asimor75
 Tags: multisite, ui, admin, user interface, waas, wp-ultimo
 Requires at least: 4.4
 Tested up to: 5.2.2

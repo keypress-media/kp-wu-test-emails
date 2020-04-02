@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       KeyPress WP Ultimo Test Emails
- * Plugin URI:        https://getkeypress.com/
+ * Plugin URI:        https://github.com/keypress-media/kp-wu-test-emails
  * Description:       Send test emails of WP Ultimo email templates.
  * Version:           1.0
  * Author:            KeyPress Media
@@ -105,50 +105,70 @@ if ( ! class_exists( 'KP_WU_TEST_EMAILS' ) ) {
             $email_templates = $wu_mail->get_templates();
 
             ?>
-            <div style="bottom: 25px;position: absolute;left: 230px;">
-                <input type="text" id="rr-test-email-address" placeholder="email address" style="vertical-align: bottom"/>
-                <select id="rr-test-email-template">
-                    <?php foreach( $email_templates as $id => $template ) : ?>
-                        <option value="<?php echo esc_attr( $id ) ?>">
-                            <?php echo esc_html( $template['name'] ); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <button id="rr-send-test-email-btn" class="button button-secondary"><?php esc_html_e( 'Send Test Email', 'kpwutem' ) ?></button>
-            </div>
+            <table class="form-table" id="rr-send-test-email-section" style="margin-bottom: 50px;">
+                <thead>
+                    <tr>
+                        <th colspan="2">
+                            <h3><?php _e( 'Test Email Templates', 'kpwutem' ); ?></h3>
+                            <p style="font-weight: initial;"><?php _e( 'Send tests of the email templates to check if they are visualized correctly.', 'kpwutem' ); ?></p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row"><label for="expiring_days"><?php _e( 'Send Test Email', 'kpwutem' ) ?></label> </th>
+                        <td>
+                            <input type="text" id="rr-test-email-address" placeholder="email address" style="vertical-align: bottom"/>
+                            <select id="rr-test-email-template">
+                                <?php foreach( $email_templates as $id => $template ) : ?>
+                                    <option value="<?php echo esc_attr( $id ) ?>">
+                                        <?php echo esc_html( $template['name'] ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <button id="rr-send-test-email-btn" class="button button-secondary"><?php esc_html_e( 'Send Test Email', 'kpwutem' ) ?></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <script type="text/javascript">
                 (function( $ ) {
-                    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-                        url        = '<?php echo admin_url( 'admin-ajax.php' ); ?>',
-                        sendBtn    = $( '#rr-send-test-email-btn' ),
-                        spinner    = $( '<div class="spinner"></div>' ).insertAfter( sendBtn ),
-                        msg        = $( '<span style="display:inline-block;margin-left: 10px;"></span>' ).insertAfter( sendBtn );
+                    $( document ).ready( function () {
+                        var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                            url        = '<?php echo admin_url( 'admin-ajax.php' ); ?>',
+                            sendBtn    = $( '#rr-send-test-email-btn' ),
+                            spinner    = $( '<div class="spinner" style="float: none;"></div>' ),
+                            msg        = $( '<span style="display:inline-block;margin-left: 10px;"></span>' );
 
-                    sendBtn.click( function( e ) {
-                        e.preventDefault();
-                        msg.hide();
-                        var email    = $('#rr-test-email-address').val();
-                        var template = $('#rr-test-email-template').val();
+                        spinner.insertAfter( sendBtn );
+                        msg.insertAfter( sendBtn );
 
-                        if( ! email.match( mailformat ) ) {
-                            alert( 'Please enter a valid email address' );
-                            return false;
-                        } else {
-                            spinner.addClass('is-active');
+                        sendBtn.click( function( e ) {
+                            e.preventDefault();
+                            msg.hide();
+                            var email    = $('#rr-test-email-address').val();
+                            var template = $('#rr-test-email-template').val();
 
-                            var data    = {
-                                'action'   : '<?php echo self::ACTION_SEND_TEST_EMAIL ?>',
-                                'nonce'    : '<?php echo wp_create_nonce( self::ACTION_SEND_TEST_EMAIL ); ?>',
-                                'email'    : email,
-                                'template' : template
+                            if( ! email.match( mailformat ) ) {
+                                alert( 'Please enter a valid email address' );
+                                return false;
+                            } else {
+                                spinner.addClass('is-active');
+
+                                var data    = {
+                                    'action'   : '<?php echo self::ACTION_SEND_TEST_EMAIL ?>',
+                                    'nonce'    : '<?php echo wp_create_nonce( self::ACTION_SEND_TEST_EMAIL ); ?>',
+                                    'email'    : email,
+                                    'template' : template
+                                }
+
+                                $.post( url, data, function( response ) {
+                                    spinner.removeClass('is-active');
+                                    msg.text(response);
+                                    msg.show();
+                                });
                             }
-
-                            $.post( url, data, function( response ) {
-                                spinner.removeClass('is-active');
-                                msg.text(response);
-                                msg.show();
-                            });
-                        }
+                        });
                     });
                 })( jQuery );
             </script>

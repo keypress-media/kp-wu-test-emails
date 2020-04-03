@@ -31,16 +31,16 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! defined( KPWETEM_PLUGIN_VERSION ) ) {
-    define( 'KPWETEM_PLUGIN_VERSION', '1.0' );
+if ( ! defined( 'KPWUTEM_PLUGIN_VERSION' ) ) {
+    define( 'KPWUTEM_PLUGIN_VERSION', '1.0' );
 }
 
-if ( ! defined( KPWETEM_PLUGIN_FILE ) ) {
-    define( 'KPWETEM_PLUGIN_FILE', trailingslashit( dirname( dirname( __FILE__ ) ) ) . 'keypress-wu-test-emails.php' );
+if ( ! defined( 'KPWUTEM_PLUGIN_FILE' ) ) {
+    define( 'KPWUTEM_PLUGIN_FILE', trailingslashit( dirname( dirname( __FILE__ ) ) ) . 'keypress-wu-test-emails.php' );
 }
 
-if ( ! defined( KPWETEM_PLUGIN_DIR ) ) {
-    define( 'KPWETEM_PLUGIN_DIR', plugin_dir_path( KPWETEM_PLUGIN_FILE ) );
+if ( ! defined( 'KPWUTEM_PLUGIN_DIR' ) ) {
+    define( 'KPWUTEM_PLUGIN_DIR', plugin_dir_path( KPWUTEM_PLUGIN_FILE ) );
 }
 
 if ( ! class_exists( 'KP_WU_TEST_EMAILS' ) ) {
@@ -87,7 +87,7 @@ if ( ! class_exists( 'KP_WU_TEST_EMAILS' ) ) {
             load_plugin_textdomain(
                 'kpwutem',
                 false,
-                KPWETEM_PLUGIN_DIR . '/languages/'
+                KPWUTEM_PLUGIN_VERSION . '/languages/'
             );
         }
 
@@ -285,7 +285,7 @@ if ( ! class_exists( 'KP_WU_TEST_EMAILS' ) ) {
          */
         public function __clone() {
             // Cloning instances of the class is forbidden.
-            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kpwutem' ), KPWETEM_PLUGIN_VERSION );
+            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kpwutem' ), KPWUTEM_PLUGIN_VERSION );
         }
 
         /**
@@ -297,7 +297,7 @@ if ( ! class_exists( 'KP_WU_TEST_EMAILS' ) ) {
          */
         public function __wakeup() {
             // Unserializing instances of the class is forbidden.
-            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kpwutem' ), KPWETEM_PLUGIN_VERSION );
+            _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kpwutem' ), KPWUTEM_PLUGIN_VERSION );
         }
     }
 }

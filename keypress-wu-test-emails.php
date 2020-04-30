@@ -36,7 +36,7 @@ if ( ! defined( 'KPWUTEM_PLUGIN_VERSION' ) ) {
 }
 
 if ( ! defined( 'KPWUTEM_PLUGIN_FILE' ) ) {
-    define( 'KPWUTEM_PLUGIN_FILE', trailingslashit( dirname( dirname( __FILE__ ) ) ) . 'keypress-wu-test-emails.php' );
+    define( 'KPWUTEM_PLUGIN_FILE', trailingslashit( dirname( dirname( __FILE__ ) ) ) . 'kp-snippets.php' );
 }
 
 if ( ! defined( 'KPWUTEM_PLUGIN_DIR' ) ) {
@@ -70,9 +70,12 @@ if ( ! class_exists( 'KP_WU_TEST_EMAILS' ) ) {
          */
         public function init() {
             add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
-            add_action( 'admin_init', array( $this, 'check_requirements' ) );
 
-            if ( $this->check_requirements() ) {
+            if ( ! is_multisite() ) {
+                add_action( 'admin_notices', array( $this, 'render_not_multisite_notice' ) );
+            } elseif( ! is_plugin_active( 'wp-ultimo/wp-ultimo.php' ) ) {
+                add_action( 'network_admin_notices', array( $this, 'render_not_wp_ultimo_notice' ) );
+            } else {
                 add_action( 'wu_after_settings_section_emails', array( $this, 'add_test_emails_section' ) );
                 add_action( 'wp_ajax_' . self::ACTION_SEND_TEST_EMAIL, array( $this, 'ajax_send_test_email' ) );
             }
@@ -205,27 +208,6 @@ if ( ! class_exists( 'KP_WU_TEST_EMAILS' ) ) {
             $result   = $wu_mail->send_template( $template, $email, array() );
 
             wp_die( $result ? $success_msg : $error_msg );
-        }
-
-        /**
-         * Checks the plugin requirements and renders an admin notice when needed.
-         *
-         * @since 1.0
-         * @return bool
-         */
-        public function check_requirements() {
-
-            if ( ! is_multisite() ) {
-                add_action( 'admin_notices', array( $this, 'render_not_multisite_notice' ) );
-                return false;
-            }
-
-            if ( ! is_plugin_active( 'wp-ultimo/wp-ultimo.php' ) ) {
-                add_action( 'network_admin_notices', array( $this, 'render_not_wp_ultimo_notice' ) );
-                return false;
-            }
-
-            return true;
         }
 
         /**
